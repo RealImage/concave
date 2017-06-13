@@ -1,0 +1,22 @@
+{
+  "name": "concave",
+  "version": "1.0.0",
+  "description": "On-the-fly image resizing with AWS Lambda",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/RealImage/concave.git"
+  },
+  "author": "",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/RealImage/concave/issues"
+  },
+  "homepage": "https://github.com/RealImage/concave#readme",
+  "dependencies": {
+    "sharp": "^0.18.1"
+  }
+}
