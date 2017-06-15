@@ -2,19 +2,29 @@ const http = require('http');
 const url = require('url');
 const querystring = require('querystring');
 
+const handler = require('./index').handler;
+
 // Create a server
 http.createServer((request, response) => {
-   // Parse the request containing file name
-  console.log(request.url);
   const parsedUrl = url.parse(request.url);
+  // Make an event in the Lambda Proxy Event format
+  // http://docs.aws.amazon.com/apigateway/latest/developerguide/api-gateway-set-up-simple-proxy.html#api-gateway-simple-proxy-for-lambda-input-format
+  const event = {
+    pathParameters: {
+      proxy: parsedUrl.pathname.slice(1),
+    },
+    queryStringParameters: querystring.parse(parsedUrl.query),
+  };
+  console.log(event);
 
-   // Print the name of the file for which request is made.
-  console.log(parsedUrl.pathname.slice(1));
-  console.log(querystring.parse(parsedUrl.query));
-
-
-  response.writeHead(200, { 'Content-Type': 'text/html' });
-  // response.write(data.toString());
-
-  response.end();
-}).listen(8081);
+  handler(event, null, (error, responseDef) => {
+    // Read Lambda output format and send back a response
+    // http://docs.aws.amazon.com/apigateway/latest/developerguide/api-gateway-set-up-simple-proxy.html#api-gateway-simple-proxy-for-lambda-output-format
+    response.writeHead(responseDef.statusCode, responseDef.headers);
+    const decodedBody = responseDef.isBase64Encoded ?
+                        new Buffer(responseDef.body, 'base64') :
+                        responseDef.body;
+    response.write(decodedBody);
+    response.end();
+  });
+}).listen(process.env.PORT || 8081);
