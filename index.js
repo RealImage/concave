@@ -36,6 +36,7 @@ exports.handler = (event, _, callback) => {
           isBase64Encoded: true,
           headers: {
             'Content-Type': `image/${info.format}`,
+            'Cache-Control': 'public, max-age=315360000',
             'X-Aspect-Ratio': (info.width / info.height),
           },
         });
