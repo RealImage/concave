@@ -7,7 +7,7 @@ exports.handler = (event, _, callback) => {
   console.log(event.pathParameters);
   const bucket = process.env.BUCKET;
   const key = event.pathParameters.proxy;
-  const options = event.queryStringParameters;
+  const options = event.queryStringParameters || {};
   const params = {
     Bucket: bucket,
     Key: key,
